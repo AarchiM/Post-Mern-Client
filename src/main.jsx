@@ -21,7 +21,7 @@ const router = createBrowserRouter([
         element:<ReadPost/>
       },
       {
-        path:"/update",
+        path:"/:id",
         element:<UpdatePost/>
       }
     ],

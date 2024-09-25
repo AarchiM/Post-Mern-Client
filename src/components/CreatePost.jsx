@@ -7,6 +7,8 @@ const CreatePost = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [age, setAge] = useState(0);
+
+  
   const SubmitHandler = async (e) => {
     e.preventDefault();
     const addUser = { name, email, age };

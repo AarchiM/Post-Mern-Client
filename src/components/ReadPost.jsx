@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const ReadPost = () => {
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [error, setError] = useState();
 
+  const navigate = useNavigate();
   async function getApiData() {
-    const response = await fetch("http://localhost:4000/api");
+    const response = await fetch("/api");
     const result = await response.json();
 
     if (!response) {
@@ -15,6 +17,24 @@ const ReadPost = () => {
     if (response) {
       setData(result);
       setError("");
+    }
+  }
+
+  const DeleteHandler = async(id) =>
+  {
+    const response = await fetch(`http://localhost:4000/api/${id}`, {
+      method: "DELETE",
+    })
+    const result = await response.json();
+
+    if (!response.ok)
+    {
+      setError(result.error);
+    }
+    if (response)
+    {
+      setError("")
+      getApiData();
     }
   }
 
@@ -30,8 +50,8 @@ const ReadPost = () => {
         style={{ gridAutoRows: "1fr" }}
       >
         {data?.map((post) => (
-          <div>
-            <div className="bg-gray-100 p-2 text-center" key={post._id}>
+          <div key={post._id}>
+            <div className="bg-gray-100 p-2 text-center" >
               <h3>{post.name}</h3>
               <h6>{post.email}</h6>
               <p>Age: {post.age}</p>
@@ -43,16 +63,19 @@ const ReadPost = () => {
               </p>
             </div>
             <div className="flex justify-between bg-black p-3">
-              <input
-                className="bg-blue-200 px-3 py-1 rounded-xl hover:bg-blue-300"
-                type="button"
-                value="Edit"
-              />
+              <Link className="bg-blue-200 px-3 py-1 rounded-xl hover:bg-blue-300"
+                to={`/${post._id}`}
+                >
+              Edit
+              </Link>
+              
               <input
                 className="bg-blue-200 px-3 py-1 rounded-xl hover:bg-blue-300"
                 type="button"
                 value="Delete"
+                onClick={()=>DeleteHandler(post._id)}
               />
+
             </div>
           </div>
         ))}
